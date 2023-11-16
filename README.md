@@ -30,3 +30,6 @@ This command starts the spider named 'implisense', which will begin crawling the
 
 ## Output
 The spider stores the extracted URLs in a SQLite database file named implisense.db. This file is created in the same directory as the spider. You can use any SQLite database viewer to check the extracted data.
+
+## Author
+This project was developed by Zerrouki Samir. For any queries or assistance, feel free to contact me at samir.etude.zerrouki@gmail.com.
