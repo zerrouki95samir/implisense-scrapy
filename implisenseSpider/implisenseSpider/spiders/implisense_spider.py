@@ -44,18 +44,21 @@ class ImplisenseSpider(scrapy.Spider):
                 
 
     def is_company_url(self, url):
-        return "/de/companies/" in url or "/en/companies/" in url
+        return "/de/companies/" in url and not url.startswith("https://api.whatsapp.com/send?text=") 
+
     
     def should_follow_link(self, url):
         unwanted_keywords = ["login", "pricing", "subscriptions", "referer"]
         return all(keyword not in url for keyword in unwanted_keywords) and self.is_internal_url(url)
     
     def url_exists(self, url):
-        self.cursor.execute('SELECT id FROM company_urls WHERE url = ?', (url,))
+        url_without_fragment_query = url.split('#')[0].split('?')[0]
+        self.cursor.execute('SELECT id FROM company_urls WHERE url = ?', (url_without_fragment_query,))
         return self.cursor.fetchone() is not None
 
     def add_url(self, url):
-        self.cursor.execute('INSERT OR IGNORE INTO company_urls (url) VALUES (?)', (url,))
+        url_without_fragment_query = url.split('#')[0].split('?')[0]
+        self.cursor.execute('INSERT OR IGNORE INTO company_urls (url) VALUES (?)', (url_without_fragment_query,))
         self.conn.commit()
 
     def closed(self, reason):
